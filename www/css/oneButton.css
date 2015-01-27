@@ -1,0 +1,23 @@
+.oneButtonWrapper {
+  display: block;
+  position: absolute;
+  font-size: 16px;
+  text-align: center; }
+
+.oneButton {
+  height: 96px;
+  width: 96px;
+  line-height: 96px;
+  border-radius: 48px;
+  text-align: center;
+  margin: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 24px;
+  background-color: red;
+  font-size: 24px;
+  font-weight: bold;
+  font-family: sans-serif; }
+
+/*# sourceMappingURL=oneButton.css.map */
