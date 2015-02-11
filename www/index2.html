@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <!-- <link rel="stylesheet" href="css/materialize.min.css" type="text/css" media="all" />-->
+        <title> click2 </title>
+    </head>
+    <script type="text/javascript">
+        function addOne(){
+            date = new Date()
+            console.log( date )
+            console.log( date.Format('YMDhmsx') )
+            $.post(
+                'http://121.41.47.132:82/oneButton',
+                {
+                    myname:'carwest',
+                    yourname:'allen',
+                    content:'{"instr":"addOne", "data":"hello"}'
+                },
+                function ( data ){
+                    console.log( data );
+                }
+            )
+        }
+    </script>
+    <body>
+        <div class="btn-floating waves-effect waves-light btn-large red"
+            onclick="addOne">
+            <i class="mdi-content-add"></i>
+        </div>
+        <br />
+        <button onclick="addOne()"> addOne </button>
+        <br />
+        
+
+        <div id="addCata_Warpper">
+            <input type="text" name="addCata" id="addCata" value="study" />
+            <button onclick="obf.addCata( $('#addCata').val() )"> add </button>
+        </div>
+        <button onclick="obf.getCataList()"> getCataList </button>
+        <hr />
+
+
+        <div id="addType_Warpper">
+            <input type="text" name="addType" id="addType_name" value="type_name" />
+            <input type="text" name="addType" id="addType_color" value="type_color" />
+            <select id="addType_catalist">
+            </select>
+            <button onclick="obf.addType($('#addType_name').val(), $('#addType_color').val(), $('#addType_catalist option:selected').text())"> add </button>
+        </div>
+
+        <button onclick="obf.getTypeList()"> getTypeList </button>
+        <br />
+        <hr />
+
+        <br />
+        <button onclick="obf.getEventList()"> getEventList </button>
+        <br />
+        <button onclick="obf.addOneEvent()"> addOneEvent </button>
+        <br />
+
+        <button id="addOneEvent">  </button>
+
+
+        <hr /> 
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script src="js/util2.js" type="text/javascript" charset="utf-8"></script>
+        <!--
+        <script src="js/materialize.min.js" type="text/javascript" charset="utf-8"></script>
+        -->
+    </body>
+</html>

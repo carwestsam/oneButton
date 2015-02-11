@@ -1,30 +1,5 @@
 "use strict"
 
-Date.prototype.Format = function( fmt ){
-    var IntFormat = function( num, size ){
-        var Str = "";
-        if ( typeof num === "number"  ){
-            Str += num;
-            while ( Str.length < size ){
-                Str = "0" + Str;
-            }
-        }
-        return Str;
-    }
-    var o = {
-        'Y': IntFormat(this.getFullYear() , 4),
-        'M': IntFormat((this.getMonth() + 1) , 2),
-        'D': IntFormat((this.getDate() + 1) , 2),
-        'h': IntFormat((this.getHours() + 1) , 2),
-        'm': IntFormat((this.getMinutes() + 1), 2),
-        's': IntFormat((this.getSeconds() + 1), 2)
-    };
-    for ( var item in o){
-        var reg = new RegExp( item, 'g' );
-        fmt = fmt.replace( reg , o[item] );
-    }
-    return fmt;
-}
 
 var oneButton = angular.module("oneButton", []);
 oneButton.controller( "Page", function ( $scope ){
