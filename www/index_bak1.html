@@ -17,7 +17,6 @@
     specific language governing permissions and limitations
     under the License.
 -->
-
 <html>
     <head>
         <meta charset="utf-8" />
@@ -28,48 +27,43 @@
         <link rel="stylesheet" type="text/css" href="css/oneButton.css" />
         <title>Hello World</title>
         <script type="text/javascript" src="js/angular.min.js"></script>
-        <script type="text/javascript" src="js/util2.js"></script>
+        <script type="text/javascript" src="js/util.js"></script>
         <script type="text/javascript" src="js/oneButton.js"></script>
     </head>
     <body>
 
-        <div ng-app="oneButton" ng-controller="Page as page">
+        <div ng-app="oneButton" ng-controller="Page" >
+            {{ Page.name }}
+            <div ng-controller="ListView">
+                {{ListView.name}}
+                <div ng-repeat="item in ListView.List" style="background-color : {{ item.getColor() }}">
+                    <div ng-click="item.toggleDisplayFull()">
+                        {{ item.date }}
+                        <div ng-show="item.displayFull">
+                            {{item.type}}
+                            <br />
+                            <button ng-repeat="color in ListView.getTypeList()" ng-click='ListView.setType(item, color)'>
+                                {{color}}
+                            </button>
 
-            <ul>
-                <li ng-repeat="cataitem in cataList">
-                    {{ cataitem }} <a ng-click="Page.delCata(cataitem.id)"> X </a>
-                </li> 
-            </ul>
-            <button ng-click="Page.getCataList()"> getCataList</button>
-            <br />
-            <input type="text" ng-model="addCataName" />
-            <button ng-click="Page.addCata( addCataName )" > add Cata</button>
-            <hr />
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <ul>
-                <li ng-repeat="typeitem in typeList">
-                    {{ typeitem }} 
-                </li> 
-            </ul>
-            <button ng-click="Page.getTypeList()"> getTypeList </button>
-
-
-            <ul>
-                <li ng-repeat="event in eventList">
-                    {{ event }}
-                </li> 
-            </ul>
-            <button ng-click="Page.getEventList()"> getEventList </button>
-
-            <div ng-controller="ListViewCtrl"></div>
-            <div ng-controller="ButtonCtrl" ng-click="clickFunc()" ng-show="ButtonCtrl.available">
-                click me
+            <div class="btn-floating btn-large waves-effect waves-light red">
+                <i class="mdi-content-add"></i>
+            </div>
+            <div class="oneButton" ng-click="ButtonCtrl.clickFunc()" ng-controller="ButtonCtrl">
+                {{ ButtonCtrl.name }}
             </div>
         </div>
 
 
-    
-        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <!-- 
+        <script type="text/javascript" src="js/index.js"></script>
+        -->
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/materialize.min.js" type="text/javascript" charset="utf-8"></script>
     </body>
 </html>

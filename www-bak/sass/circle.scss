@@ -1,0 +1,8 @@
+@mixin Circle ( $Radius : 30px ){
+    height: $Radius * 2;
+    width: $Radius * 2;
+    line-height: $Radius * 2;
+    border-radius: $Radius;
+    text-align: center;
+}
+

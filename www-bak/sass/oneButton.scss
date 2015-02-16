@@ -1,0 +1,22 @@
+$SmallFontSize : 16px;
+$BigFontSize : (1.5*$SmallFontSize);
+
+.oneButtonWrapper{
+    display: block;
+    position: absolute;
+    font-size: $SmallFontSize;
+    text-align: center;
+}
+
+.oneButton{
+    @import "circle.scss";
+    @include Circle( $BigFontSize*2 );
+    margin: auto;
+    position: absolute;
+    left: 0; right: 0; bottom: $BigFontSize;
+    background-color: red;
+    font-size: $BigFontSize;
+    font-weight: bold;
+    font-family: sans-serif;
+}
+

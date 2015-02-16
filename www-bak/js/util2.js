@@ -163,7 +163,7 @@ function OBF(){
                 thispt.getCataList();
                 thispt.getEventList();
                 console.log( "f:addOneEvent", responce );
-            },
+            }
             thispt.execCallback()
         )
     };
