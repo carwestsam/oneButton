@@ -27,23 +27,42 @@ oneButton
     }
     $scope.Page.addCata = function( cata_name ){
         console.log( 'Page', cata_name )
-        cata.addCata( cata_name, { 't': "" }, 't', function(){cata.getCataList( $scope, 'cataList' ) })
+        cata.addCata( {'cata_name':cata_name}, function(){cata.getCataList( $scope, 'cataList' ) })
         //cata.getCataList( $scope, 'cataList' )
     }
+    /*
+     *
+     * forbid delete
+     * 暂时没有想到好的处理删除的办法
+     *
+     *
     $scope.Page.delCata = function( cata_id ){
         console.log( 'delCata', cata_id )
         cata.delCata( cata_id, function(){cata.getCataList( $scope, 'cataList' )} )
-    }
+    }*/
 
     $scope.Page.getTypeList = function() {
         types.getTypeList( $scope, 'typeList' )
     }
+    $scope.Page.addType = function( typeName, typeColor, cataId ){
+        types.addType(
+            {
+                'type_name': typeName,
+                'type_color' : typeColor,
+                'cata_id' : cataId
+            },
+            function() {
+                $scope.Page.getTypeList()
+            }
+        )
+    }
+
+
     $scope.Page.getEventList = function(){
         events.getEventList ( $scope, 'eventList' )
     }
 }])
 .controller( "ListViewCtrl", function( $scope ) {
-
 })
 .controller( "ButtonCtrl", [ '$scope', 'cataFactory', 'typeFactory' , function( $scope, cata, types ){
     $scope.ButtonCtrl = {}
@@ -75,7 +94,8 @@ oneButton
 .factory( "typeFactory", [ 'poster', 'FactoryProto',
     function ( poster, factoryProto ){
         return {
-            getTypeList : factoryProto.getFactoryFunc( 'getTypeList', 'hello' )
+            getTypeList : factoryProto.getFactoryFunc( 'getTypeList', 'hello' ),
+            addType : factoryProto.addFactoryFunc( 'addType' )
         }
     }
 ] )
@@ -83,15 +103,7 @@ oneButton
     function (  poster, fp ){
         return {
             getCataList : fp.getFactoryFunc( 'getCataList', 'hello' ),
-            addCata : function( cata_name, obj, key, cbFunc ){
-                console.log( 'addCata', cata_name )
-                poster( 'addOneCata',
-                        JSON.stringify({"cata_name": cata_name}),
-                        function( xdata ){
-                            obj[key] = xdata;
-                            cbFunc()
-                        })
-            },
+            addCata : fp.addFactoryFunc( 'addOneCata' ),
             delCata : function( cata_id, cbFunc ){
                 console.log( 'delCata', cata_id )
                 poster( 'delCata',
@@ -114,8 +126,13 @@ oneButton
                     poster( instr, data, function( xdata ){
                         obj[key] = xdata
                     } )
+                }},
+            addFactoryFunc: function( instr ){
+                return function( newObj, cbFunc ){
+                    poster( instr, JSON.stringify( newObj ), function( xdata ){ cbFunc() } )
                 }
-        }}
+            },
+        }
     }
 ]  )
 .factory( "poster", ['$http',

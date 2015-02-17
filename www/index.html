@@ -37,7 +37,10 @@
 
             <ul>
                 <li ng-repeat="cataitem in cataList">
-                    {{ cataitem }} <a ng-click="Page.delCata(cataitem.id)"> X </a>
+                    {{ cataitem }}
+                    <!--
+                    <a ng-click="Page.delCata(cataitem.id)"> X </a>
+                    -->
                 </li> 
             </ul>
             <button ng-click="Page.getCataList()"> getCataList</button>
@@ -52,7 +55,13 @@
                 </li> 
             </ul>
             <button ng-click="Page.getTypeList()"> getTypeList </button>
+            <br />
+            <input type="text" ng-model="addTypeName" />
+            <input type="text" ng-model="addTypeColor" />
+            <input type="text" ng-model="addTypeCataId" />
 
+            <button ng-click="Page.addType( addTypeName, addTypeColor,
+                addTypeCataId )"> addType </button>
 
             <ul>
                 <li ng-repeat="event in eventList">
