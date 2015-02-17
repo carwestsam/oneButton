@@ -61,6 +61,17 @@ oneButton
     $scope.Page.getEventList = function(){
         events.getEventList ( $scope, 'eventList' )
     }
+    $scope.Page.addEvent = function( event_time, type_id ){
+        events.addEvent(
+            {
+                'event_time' : event_time,
+                'type_id' : type_id
+            },
+            function(){
+                $scope.Page.getEventList()
+            }
+        )
+    }
 }])
 .controller( "ListViewCtrl", function( $scope ) {
 })
@@ -76,8 +87,9 @@ oneButton
 
     $scope.clickFunc = function (){
         var date = new Date()
-        console.log( date.Format("YMDmsx") )
-        $scope.Page.getCataList()
+        var dateStr = date.Format( "YMDhmsx" )
+        console.log( date.Format("YMDhmsx") )
+        $scope.Page.addEvent(  dateStr, 1 )
     }
 
     $scope.Page.getEventList();
@@ -87,7 +99,8 @@ oneButton
 .factory( "eventFactory", [ 'poster', 'FactoryProto',
     function( poster, fp ){
         return {
-            getEventList : fp.getFactoryFunc( 'getEventList', 'hello' )
+            getEventList : fp.getFactoryFunc( 'getEventList', 'hello' ),
+            addEvent : fp.addFactoryFunc( 'addEvent' ),
         }
     }
 ] )
@@ -164,3 +177,4 @@ oneButton
         }
     }
 ] )
+
