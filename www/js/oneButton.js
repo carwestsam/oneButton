@@ -10,15 +10,18 @@ oneButton
     $scope.cataList = null
     $scope.typeList = null
     $scope.eventList = null
+    $scope.cataMap = new Map()
+    $scope.typeMap = new Map()
+    $scope.eventMap = new Map()
 
-    $scope.netLock = false
+    $scope.Page.netLock = false
     $scope.$watch(
         function(){
             return ( $scope.cataList != null && $scope.typeList != null && $scope.eventList != null )},
 
         function( newValue, oldValue ){
-            console.log( 'Page', 'init' )
-            $scope.netLock = !newValue;
+            console.log( 'Page', 'init', newValue, oldValue )
+            $scope.Page.netLock = !newValue;
         }
     )
 
@@ -74,13 +77,32 @@ oneButton
     }
 }])
 .controller( "ListViewCtrl", function( $scope ) {
+    $scope.ListView = {}
+    $scope.ListView.name = "ListView"
+
+    $scope.ListView.List = []
+    
+    $scope.$watch( function(){ return $scope.Page.netLock}, function( newValue, oldValue ){
+        if ( $scope.netLock == true ) return
+        console.log( "** ListView Watcher **" )
+        var tmpList = []
+        for ( var idx in $scope.$parent.eventList ){
+            var item = {}
+            var event = $scope.$parent.eventList[idx]
+            item.eventTime = event.event_time
+            //console.log( $scope.$parent.eventList[idx] )
+
+            tmpList.push( item )
+        }
+        $scope.ListView.List = tmpList
+    })
 })
 .controller( "ButtonCtrl", [ '$scope', 'cataFactory', 'typeFactory' , function( $scope, cata, types ){
     $scope.ButtonCtrl = {}
     $scope.ButtonCtrl.name = "ButtonCtrl"
     $scope.ButtonCtrl.available = false
 
-    $scope.$watch( $scope.netLock, function( newValue, oldValue ){
+    $scope.$watch( function(){ return $scope.Page.netLock}, function( newValue, oldValue ){
         console.log( 'hello', newValue, oldValue )
         $scope.ButtonCtrl.available = !$scope.newLock;
     } )

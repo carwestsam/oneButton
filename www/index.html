@@ -70,7 +70,11 @@
             </ul>
             <button ng-click="Page.getEventList()"> getEventList </button>
 
-            <div ng-controller="ListViewCtrl"></div>
+            <div ng-controller="ListViewCtrl">
+                <ul>
+                    <li ng-repeat="eventItem in ListView.List | orderBy:event_time" > {{ eventItem.eventTime }} </li>
+                </ul>
+            </div>
             <div ng-controller="ButtonCtrl" ng-click="clickFunc()" ng-show="ButtonCtrl.available">
                 click
             </div>
