@@ -14,10 +14,10 @@ Date.prototype.Format = function( fmt ){
     var o = {
         'Y': IntFormat(this.getFullYear() , 4),
         'M': IntFormat((this.getMonth() + 1) , 2),
-        'D': IntFormat((this.getDate() + 1) , 2),
-        'h': IntFormat((this.getHours() + 1) , 2),
-        'm': IntFormat((this.getMinutes() + 1), 2),
-        's': IntFormat((this.getSeconds() + 1), 2),
+        'D': IntFormat(this.getDate() , 2),
+        'h': IntFormat(this.getHours() , 2),
+        'm': IntFormat(this.getMinutes() , 2),
+        's': IntFormat(this.getSeconds() , 2),
         'x': IntFormat(this.getMilliseconds(), 3)
     };
     for ( var item in o){
@@ -25,6 +25,29 @@ Date.prototype.Format = function( fmt ){
         fmt = fmt.replace( reg , o[item] );
     }
     return fmt;
+}
+
+Date.prototype.parseStr = function( str ){
+
+    var init = parseInt( str )
+    var milliseconds = str % 1000;
+    str /= 1000
+    var seconds = str % 100;
+    str /= 100
+    var minutes = str % 100;
+    str /= 100
+    var hours = str % 100;
+    str /= 100;
+    var day = str % 100;
+    str /= 100;
+    var month = str % 100;
+    str /= 100;
+    var year = str % 1000;
+    str /= 10000;
+
+    var d = new Date( year, month, day, hours, minutes, seconds, milliseconds )
+    console.log( d.Format ( "YMDhmsx" ) );
+    return d;
 }
 
 // POST Wrapper

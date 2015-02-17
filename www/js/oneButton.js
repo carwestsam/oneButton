@@ -76,11 +76,14 @@ oneButton
         )
     }
 }])
-.controller( "ListViewCtrl", function( $scope ) {
+.controller( "ListViewCtrl", [ '$scope', 'finder', function( $scope, finder ) {
     $scope.ListView = {}
     $scope.ListView.name = "ListView"
 
     $scope.ListView.List = []
+
+    $scope.order = 'event_time'
+    $scope.reverse = true
     
     $scope.$watch( function(){ return $scope.Page.netLock}, function( newValue, oldValue ){
         if ( $scope.netLock == true ) return
@@ -90,13 +93,37 @@ oneButton
             var item = {}
             var event = $scope.$parent.eventList[idx]
             item.eventTime = event.event_time
+            item.id = event.id
+            var d = new Date()
+            item.timePoint = d.parseStr( item.eventTime )
+
             //console.log( $scope.$parent.eventList[idx] )
 
             tmpList.push( item )
         }
+        tmpList.sort( function(a,b){
+            a = parseInt( a.eventTime )
+            b = parseInt( b.eventTime )
+            return a - b;
+        } )
+
+        for ( var idx=1; idx < tmpList.length; idx ++  ){
+            tmpList[idx].duration = tmpList[idx].timePoint - tmpList[idx-1].timePoint
+        }
+        tmpList.shift()
         $scope.ListView.List = tmpList
+
+        $('.dropdown-button').dropdown({
+            inDuration: 300,
+            outDuration: 225,
+            constrain_width: true, // Does not change width of dropdown to that of the activator
+            hover: false, // Activate on click
+            alignment: 'left', // Aligns dropdown to left or right edge (works with constrain_width)
+            gutter: 0, // Spacing from edge
+            belowOrigin: true // Displays dropdown below the button
+        });
     })
-})
+}])
 .controller( "ButtonCtrl", [ '$scope', 'cataFactory', 'typeFactory' , function( $scope, cata, types ){
     $scope.ButtonCtrl = {}
     $scope.ButtonCtrl.name = "ButtonCtrl"
@@ -111,13 +138,49 @@ oneButton
         var date = new Date()
         var dateStr = date.Format( "YMDhmsx" )
         console.log( date.Format("YMDhmsx") )
-        $scope.Page.addEvent(  dateStr, 1 )
+        $scope.Page.addEvent(  dateStr, 0 )
     }
 
     $scope.Page.getEventList();
     $scope.Page.getTypeList();
     $scope.Page.getCataList();
 }])
+.filter( 'object2Array', function(){
+    return function(input){
+        var out = []
+        for ( i in input ){
+            out.push(input[i]);
+        }
+        return out;
+    }
+} )
+.filter( 'int2str', function(){
+    return function( input ){
+        return "" + input 
+    }
+} )
+.filter( 'millseconds2Read', function(){
+    return function( input ){
+        var num = parseInt( input )
+        var milliseconds = num % 1000; num = Math.floor( num / 1000 )
+        var seconds = num % 60; num = Math.floor( num / 60 )
+        var minutes = num % 60; num = Math.floor( num / 60 )
+        var hours = num ; num = Math.floor( num / 24 )
+
+        return ""+hours+""+hours+"时"+minutes+"分"+seconds+"秒" 
+    }
+} )
+.factory( "finder", function(){
+    return function ( arr, key, value, target ){
+        for ( var idx in arr ){
+            var obj = arr[idx]
+            if ( obj[ key ] == value ){
+                return obj[target]
+            }
+        }
+        return null
+    }
+} )
 .factory( "eventFactory", [ 'poster', 'FactoryProto',
     function( poster, fp ){
         return {
@@ -172,7 +235,7 @@ oneButton
 ]  )
 .factory( "poster", ['$http',
     function( $http ){
-        return function( instr='default', data, callbackFunc  ){
+        return function( instr, data, callbackFunc  ){
             var obj = JSON.stringify({ "instr":instr, "data": data });
             var req = {
                 method : 'post',

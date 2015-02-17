@@ -32,8 +32,47 @@
         <script type="text/javascript" src="js/oneButton.js"></script>
     </head>
     <body>
+        <ul id="dropdown2" class="dropdown-content">
+            <li> <a href = "#!">ONE</a> </li>
+            <li> <a href = "#!">TWO</a> </li>
+        </ul>
+        <a class="dropdown-button btn" href="#" data-activates="dropdown2">
+            Drop Down<i class="mdi-navigation-arrow-drop-down right"><i>
+        </a>
 
-        <div ng-app="oneButton" ng-controller="Page as page">
+        <div ng-app="oneButton" ng-controller="Page as page" class="container">
+
+            <div  class="btn-floating btn-large waves-effect waves-light red " ng-controller="ButtonCtrl" ng-click="clickFunc()" ng-show="ButtonCtrl.available">
+                click
+            </div>
+
+
+            <div ng-controller="ListViewCtrl">
+                <div class="row" >
+                <ul class ="col s12 m5">
+                    <li class="card-panel" ng-repeat="eventItem in ListView.List | orderBy:'id':'true' " >
+                        {{ eventItem.eventTime }} - {{ eventItem.duration | millseconds2Read  }}
+                        <a class="dropdown-button btn" href="#"
+                            data-activates="d{{eventItem.eventTime | int2str}}">
+                            Drop Down
+                        </a>
+                        <ul id="d{{eventItem.eventTime | int2str}}"
+                            class="dropdown-content">
+                            <li> <a>ONE</a> </li>
+                            <li> <a>TWO</a> </li>
+                        </ul>
+
+                        <ul id="dx{{eventItem.eventTime|int2str}}" class="dropdown-content">
+                            <li> <a href = "#!">ONE</a> </li>
+                            <li> <a href = "#!">TWO</a> </li>
+                        </ul>
+                            <a class="dropdown-button btn" href="#" data-activates="dx{{eventItem.eventTime}}">
+                        </a>
+                    </li>
+                </ul>
+                </div>
+            </div>
+
 
             <ul>
                 <li ng-repeat="cataitem in cataList">
@@ -70,14 +109,7 @@
             </ul>
             <button ng-click="Page.getEventList()"> getEventList </button>
 
-            <div ng-controller="ListViewCtrl">
-                <ul>
-                    <li ng-repeat="eventItem in ListView.List | orderBy:event_time" > {{ eventItem.eventTime }} </li>
-                </ul>
-            </div>
-            <div ng-controller="ButtonCtrl" ng-click="clickFunc()" ng-show="ButtonCtrl.available">
-                click
-            </div>
+
         </div>
 
 
