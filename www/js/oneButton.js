@@ -76,7 +76,7 @@ oneButton
         )
     }
 }])
-.controller( "ListViewCtrl", [ '$scope', 'finder', function( $scope, finder ) {
+.controller( "ListViewCtrl", [ '$scope', 'finder','setter', 'eventFactory' , function( $scope, finder, setter, events ) {
     $scope.ListView = {}
     $scope.ListView.name = "ListView"
 
@@ -84,6 +84,15 @@ oneButton
 
     $scope.order = 'event_time'
     $scope.reverse = true
+
+    $scope.clickConfig = function( event_id, type_id ){
+        console.log( 'clickConfig', event_id, type_id )
+        events.changeEventType(  event_id, type_id, function(){
+            var color = finder( $scope.typeList, 'id', type_id, 'type_color' )
+            console.log( "callback", event_id, type_id, color, $scope.typeList )
+            setter( $scope.ListView.List, 'id', event_id, 'type_color', color )
+        })
+    }
     
     $scope.$watch( function(){ return $scope.Page.netLock}, function( newValue, oldValue ){
         if ( $scope.netLock == true ) return
@@ -94,6 +103,9 @@ oneButton
             var event = $scope.$parent.eventList[idx]
             item.eventTime = event.event_time
             item.id = event.id
+            item.type_id = event.type_id
+            item.type_color =  finder( $scope.typeList, 'id', event.type_id, 'type_color' )
+            item.type_name = finder( $scope.typeList, 'id', event.type_id, 'type_name' )
             var d = new Date()
             item.timePoint = d.parseStr( item.eventTime )
 
@@ -161,9 +173,9 @@ oneButton
         var milliseconds = num % 1000; num = Math.floor( num / 1000 )
         var seconds = num % 60; num = Math.floor( num / 60 )
         var minutes = num % 60; num = Math.floor( num / 60 )
-        var hours = num ; num = Math.floor( num / 24 )
+        var hours = num; num = Math.floor( num / 24 )
 
-        return ""+hours+""+hours+"时"+minutes+"分"+seconds+"秒" 
+        return ""+hours+"时"+minutes+"分"+seconds+"秒" 
     }
 } )
 .factory( "finder", function(){
@@ -177,11 +189,35 @@ oneButton
         return null
     }
 } )
+.factory( "setter", function(){
+    return function( arr, key, value, target, target_val ){
+        for ( var idx in arr ){
+            var obj = arr[idx]
+            if ( obj [key] == value ){
+                obj[ target ] = target_val
+                return
+            }
+        }
+    }
+} )
 .factory( "eventFactory", [ 'poster', 'FactoryProto',
     function( poster, fp ){
         return {
             getEventList : fp.getFactoryFunc( 'getEventList', 'hello' ),
             addEvent : fp.addFactoryFunc( 'addEvent' ),
+            changeEventType : function( event_idx, new_type_idx, callbackFunc ){
+                var instr = 'changeEventType'
+                var obj ={ 'event_id': event_idx,  'type_id':new_type_idx }
+                poster( 
+                       instr,
+                       JSON.stringify( obj ),
+                       function ( xdata ){
+                           callbackFunc()
+                       },
+                       function( xdata ){
+                       }
+                )
+            }
         }
     }
 ] )
@@ -219,11 +255,13 @@ oneButton
                     obj[key] = null
                     poster( instr, data, function( xdata ){
                         obj[key] = xdata
-                    } )
+                    },function(xdata){
+
+                    })
                 }},
             addFactoryFunc: function( instr ){
                 return function( newObj, cbFunc ){
-                    poster( instr, JSON.stringify( newObj ), function( xdata ){ cbFunc() } )
+                    poster( instr, JSON.stringify( newObj ), function( xdata ){ cbFunc() }, function(xdata){} )
                 }
             },
         }
@@ -231,7 +269,7 @@ oneButton
 ]  )
 .factory( "poster", ['$http',
     function( $http ){
-        return function( instr, data, callbackFunc  ){
+        return function( instr, data, callbackFunc, errorFunc  ){
             var obj = JSON.stringify({ "instr":instr, "data": data });
             var req = {
                 method : 'post',
@@ -253,6 +291,7 @@ oneButton
                     console.log( "success", data )
                 })
                 .error( function( data, status, headers, config ){
+                    errorFunc(data);
                     console.log( "failed" )
                 } )
         }
