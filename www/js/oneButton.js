@@ -1,6 +1,10 @@
 
 "use strict"
 
+$(document).ready( function(){
+    $(".button-collapse").sideNav();
+} )
+
 var oneButton = angular.module( "oneButton", [] );
 
 oneButton

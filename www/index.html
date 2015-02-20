@@ -27,14 +27,28 @@
         <link rel="stylesheet" href="css/materialize.min.css" type="text/css" media="all" />
         <link rel="stylesheet" type="text/css" href="css/oneButton.css" />
         <title>Hello World</title>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
         <script type="text/javascript" src="js/angular.js"></script>
         <script type="text/javascript" src="js/util2.js"></script>
         <script type="text/javascript" src="js/oneButton.js"></script>
     </head>
     <body>
 
+        <div class="navbar-fixed">
+            <nav class="nav-wrapper">
+                <div class="col s12">
+                    <a href="#!" class="brand-logo"> Logo </a>
+                    <a href="#" data-activates="mobile-nav" class="button-collapse"> <i class="mdi-navigation-menu"></i> </a>
+                    <ul class="right hide-on-med-and-down">
+                        <li><a href="#"> demo </a></li><`2`>
+                    </ul>
+                    <ul class="side-nav" id="mobile-nav">
+                        <li> <a href="#"> demo up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
         <div ng-app="oneButton" ng-controller="Page as page" class="container">
-
 
             <div class="fixed-action-btn" style="bottom: 2em;right:2em;">
                 <a class="btn-floating btn-large waves-effect waves-light red " ng-controller="ButtonCtrl" id="oneButton" ng-click="clickFunc()" ng-show="ButtonCtrl.available">
@@ -55,7 +69,10 @@
                         <div class = "container">
                             <div class = "row">
                                 <div class = "col s8 m8 ">
-                                    {{ eventItem.eventTime }} - {{ eventItem.duration | millseconds2Read  }}
+                                    <i class="large mdi-action-schedule"></i>
+                                    <br />
+                                    {{ eventItem.duration | millseconds2Read }}
+
                                 </div>
 
                                 <div class = "col s4 m4">
@@ -76,47 +93,48 @@
             </div>
 
 
-            <ul>
-                <li ng-repeat="cataitem in cataList">
-                    {{ cataitem }}
-                    <!--
-                    <a ng-click="Page.delCata(cataitem.id)"> X </a>
-                    -->
-                </li> 
-            </ul>
-            <button ng-click="Page.getCataList()"> getCataList</button>
-            <br />
-            <input type="text" ng-model="addCataName" />
-            <button ng-click="Page.addCata( addCataName )" > add Cata</button>
-            <hr />
+            <div ng-show="false">
+                <ul>
+                    <li ng-repeat="cataitem in cataList">
+                        {{ cataitem }}
+                        <!--
+                        <a ng-click="Page.delCata(cataitem.id)"> X </a>
+                        -->
+                    </li> 
+                </ul>
+                <button ng-click="Page.getCataList()"> getCataList</button>
+                <br />
+                <input type="text" ng-model="addCataName" />
+                <button ng-click="Page.addCata( addCataName )" > add Cata</button>
+                <hr />
 
-            <ul>
-                <li ng-repeat="typeitem in typeList">
-                    {{ typeitem }} 
-                </li> 
-            </ul>
-            <button ng-click="Page.getTypeList()"> getTypeList </button>
-            <br />
-            <input type="text" ng-model="addTypeName" />
-            <input type="text" ng-model="addTypeColor" />
-            <input type="text" ng-model="addTypeCataId" />
+                <ul>
+                    <li ng-repeat="typeitem in typeList">
+                        {{ typeitem }} 
+                    </li> 
+                </ul>
+                <button ng-click="Page.getTypeList()"> getTypeList </button>
+                <br />
+                <input type="text" ng-model="addTypeName" />
+                <input type="text" ng-model="addTypeColor" />
+                <input type="text" ng-model="addTypeCataId" />
 
-            <button ng-click="Page.addType( addTypeName, addTypeColor,
-                addTypeCataId )"> addType </button>
+                <button ng-click="Page.addType( addTypeName, addTypeColor,
+                    addTypeCataId )"> addType </button>
 
-            <ul>
-                <li ng-repeat="event in eventList">
-                    {{ event }}
-                </li> 
-            </ul>
-            <button ng-click="Page.getEventList()"> getEventList </button>
+                <ul>
+                    <li ng-repeat="event in eventList">
+                        {{ event }}
+                    </li> 
+                </ul>
+                <button ng-click="Page.getEventList()"> getEventList </button>
+            </div>
 
 
         </div>
 
 
     
-        <script type="text/javascript" src="js/jquery.min.js"></script>
         <script src="js/materialize.min.js" type="text/javascript" charset="utf-8"></script>
     </body>
 </html>
